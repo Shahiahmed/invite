@@ -312,6 +312,7 @@
   </button>
 </div>
 <audio id="audio" src="assets/music.mp3" loop preload="auto"></audio>
+<audio id="sfx" src="assets/magic.mp3" preload="auto"></audio>
 
 <main class="page">
 
@@ -497,6 +498,7 @@
 
   // Music: shown only if assets/music.mp3 exists
   const audio = document.getElementById("audio");
+  const sfx = document.getElementById("sfx");
   const musicBtn = document.getElementById("musicBtn");
   audio.addEventListener("canplay", () => musicBtn.hidden = false, { once: true });
   audio.addEventListener("play", () => musicBtn.classList.add("playing"));
@@ -525,6 +527,9 @@
     if (opened) return;
     opened = true;
     intro.classList.add("opening");
+    // Magic chime as the envelope opens (inside the tap, so iOS allows it)
+    sfx.volume = 0.8;
+    sfx.play().catch(() => {});
     // Unlock audio inside the tap (iOS blocks play() outside a user gesture), then wait for the envelope
     audio.muted = true;
     audio.play().then(() => {
