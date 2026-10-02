@@ -7,7 +7,7 @@
 <meta name="description" content="Құдалық салтанатына шақыру · Приглашение на кудалык">
 <meta property="og:title" content="Құдалық — шақыру">
 <meta property="og:description" content="Сіздерді құдалық салтанатымызға шақырамыз!">
-<meta property="og:image" content="assets/poster.jpg">
+<meta property="og:image" content="assets/poster.jpg?v=3">
 <meta name="theme-color" content="#f6efe2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -313,9 +313,9 @@
 
   <!-- Hero with AI video -->
   <header class="hero">
-    <img class="poster" src="assets/poster.jpg" alt="">
-    <video id="heroVideo" autoplay muted loop playsinline preload="auto" poster="assets/poster.jpg">
-      <source src="assets/hero.mp4" type="video/mp4">
+    <img class="poster" src="assets/poster.jpg?v=3" alt="">
+    <video id="heroVideo" autoplay muted loop playsinline preload="auto" poster="assets/poster.jpg?v=3">
+      <source src="assets/hero.mp4?v=3" type="video/mp4">
     </video>
     <div class="hero-text">
       <div class="kicker" data-i18n="heroKicker"></div>
@@ -547,12 +547,26 @@
     intro.classList.add("hidden");
     document.body.classList.remove("locked");
     document.getElementById("heroVideo").play().catch(() => {});
+    // Music starts once the envelope is open, with a soft fade-in
+    audio.volume = 0;
+    audio.play().then(() => {
+      const fade = setInterval(() => {
+        audio.volume = Math.min(1, audio.volume + 0.05);
+        if (audio.volume >= 1) clearInterval(fade);
+      }, 100);
+    }).catch(() => {});
   }
   function openEnvelope() {
     if (opened) return;
     opened = true;
     intro.classList.add("opening");
-    audio.play().catch(() => {});
+    // Unlock audio inside the tap (iOS blocks play() outside a user gesture), then wait for the envelope
+    audio.muted = true;
+    audio.play().then(() => {
+      if (intro.classList.contains("hidden")) { audio.muted = false; return; }
+      audio.pause(); audio.currentTime = 0; audio.muted = false;
+    })
+      .catch(() => { audio.muted = false; });
     envelope.play().catch(reveal);
     // Start fading slightly before the end so the paper dissolves into the page
     envelope.addEventListener("timeupdate", () => {
