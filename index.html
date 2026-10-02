@@ -109,15 +109,9 @@
     position: fixed; top: 14px; z-index: 40;
     left: 50%; transform: translateX(-50%);
     width: min(480px, 100%); padding: 0 14px;
-    display: flex; justify-content: space-between; pointer-events: none;
+    display: flex; justify-content: flex-end; pointer-events: none;
   }
   .controls > * { pointer-events: auto; }
-  .lang { display: flex; background: rgba(255, 250, 241, .85); border-radius: 999px; padding: 3px; backdrop-filter: blur(8px); box-shadow: 0 2px 10px rgba(0,0,0,.08); }
-  .lang button {
-    font: 500 11px var(--sans); letter-spacing: .1em; color: var(--ink-soft);
-    border: 0; background: none; padding: 8px 12px; border-radius: 999px; cursor: pointer;
-  }
-  .lang button.active { background: var(--gold); color: #fff; }
   .music {
     width: 42px; height: 42px; border-radius: 50%; border: 0; cursor: pointer;
     display: grid; place-items: center;
@@ -305,16 +299,12 @@
     <source src="assets/envelope.mp4" type="video/mp4">
   </video>
   <div class="intro-hint">
-    <div class="names">Құдалық</div>
+    <div class="names">Шақырту</div>
     <span class="tap" data-i18n="open"></span>
   </div>
 </div>
 
 <div class="controls">
-  <div class="lang" role="group" aria-label="Language">
-    <button data-lang="kk">ҚАЗ</button>
-    <button data-lang="ru">РУС</button>
-  </div>
   <button class="music" id="musicBtn" aria-label="Music" hidden>
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
   </button>
@@ -399,11 +389,6 @@
     </form>
   </section>
 
-  <footer>
-    <svg class="ornament flip"><use href="#orn"/></svg>
-    <div class="big" data-i18n="bye"></div>
-    <p data-bind="signers"></p>
-  </footer>
 </main>
 
 <script>
@@ -412,11 +397,10 @@
     hosts: "Шерхан & Зарина",
     signers: "Айжан — Айгүл",                 // signature under «Ізгі ниетпен»
     date: "2026-11-14T16:00:00+05:00",       // date, time, Almaty timezone
-    venue: { kk: "«Oyu Hall» банкет залы", ru: "Банкетный зал «Oyu Hall»" },
-    address: { kk: "Астана қ., Ұлы Дала даңғылы, 35", ru: "г. Астана, пр. Улы Дала, 35" },
+    venue: "«Oyu Hall» банкет залы",
+    address: "Астана қ., Ұлы Дала даңғылы, 35",
     mapUrl: "https://2gis.kz/astana/firm/70000001091827940",
-    whatsapp: "77770000000",                  // number for guest replies, digits only
-    defaultLang: "kk"
+    whatsapp: "77770000000"                   // number for guest replies, digits only
   };
 
   const T = {
@@ -427,7 +411,7 @@
       greetTitle: "Құрметті қонақтар!",
       greetText: "Сіздерді екі әулеттің сыйластығы мен бірлігін нығайтатын құдалық салтанатымызға арналған ақ дастарханымыздың қадірлі қонағы болуға шақырамыз. Қуанышымызды бөлісіп, ақ батаңызды беріңіздер!",
       hostsLabel: "Ізгі ниетпен",
-      dateLabel: "Той күні",
+      dateLabel: "Құдалық күні",
       timeLabel: "Күні мен уақыты",
       placeLabel: "Мекенжайы",
       map: "Картаны ашу",
@@ -449,37 +433,6 @@
       weekdays: ["Дс","Сс","Ср","Бс","Жм","Сб","Жс"],
       msg: { yes: "Сәлеметсіз бе! Құдалыққа келетінімді растаймын.", couple: "Сәлеметсіз бе! Құдалыққа жұбайыммен келетінімізді растаймын.", no: "Сәлеметсіз бе! Өкінішке орай, құдалыққа келе алмаймын." },
       msgName: "Аты-жөнім"
-    },
-    ru: {
-      open: "Нажмите, чтобы открыть",
-      heroKicker: "Приглашение",
-      heroSub: "Будьте нашим почётным гостем",
-      greetTitle: "Уважаемые гости!",
-      greetText: "Приглашаем вас стать почётным гостем за нашим белым дастарханом на церемонии кудалык, которая укрепит уважение и единство двух семей. Приходите разделить нашу радость и поделиться благословениями!",
-      hostsLabel: "С наилучшими пожеланиями",
-      dateLabel: "Дата торжества",
-      timeLabel: "Дата и время",
-      placeLabel: "Место проведения",
-      map: "Открыть карту",
-      countTitle: "До торжества",
-      days: "дней", hours: "часов", minutes: "минут", seconds: "секунд",
-      started: "Торжество началось!",
-      rsvpTitle: "Подтвердите участие",
-      rsvpText: "Уважаемый гость, подтвердите, пожалуйста, ваше присутствие на торжестве",
-      namePh: "Ваше имя и фамилия",
-      optYes: "Да, я приду!",
-      optCouple: "Приду с супругом(ой)",
-      optNo: "К сожалению, не смогу прийти",
-      send: "Отправить ответ",
-      note: "Ответ будет отправлен через WhatsApp",
-      errName: "Пожалуйста, укажите ваше имя",
-      errAnswer: "Пожалуйста, выберите вариант ответа",
-      bye: "С нетерпением ждём вас!",
-      months: ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"],
-      monthsNom: ["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"],
-      weekdays: ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"],
-      msg: { yes: "Здравствуйте! Подтверждаю, что приду на кудалык.", couple: "Здравствуйте! Подтверждаю, что приду на кудалык с супругом(ой).", no: "Здравствуйте! К сожалению, не смогу прийти на кудалык." },
-      msgName: "Моё имя"
     }
   };
 
@@ -493,7 +446,7 @@
     return { y: +p.year, m: +p.month - 1, d: +p.day, time: `${p.hour}:${p.minute}` };
   })();
 
-  let lang = CONFIG.defaultLang;
+  const lang = "kk";
 
   function render() {
     const t = T[lang];
@@ -502,14 +455,13 @@
     document.querySelectorAll("[data-i18n-ph]").forEach(el => el.placeholder = t[el.dataset.i18nPh]);
     document.querySelectorAll("[data-bind]").forEach(el => {
       const v = CONFIG[el.dataset.bind];
-      el.textContent = typeof v === "object" ? v[lang] : v;
+      el.textContent = v;
     });
-    document.querySelectorAll(".lang button").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
 
     document.getElementById("monthName").textContent =
-      (lang === "ru" ? t.monthsNom[ev.m] : t.months[ev.m]) + " " + ev.y;
+      t.months[ev.m] + " " + ev.y;
     document.getElementById("dateFull").textContent =
-      lang === "kk" ? `${ev.y} ж. ${ev.d} ${t.months[ev.m]} · ${ev.time}` : `${ev.d} ${t.months[ev.m]} ${ev.y} г. · ${ev.time}`;
+      `${ev.y} ж. ${ev.d} ${t.months[ev.m]} · ${ev.time}`;
     document.getElementById("mapBtn").href = CONFIG.mapUrl;
 
     // Calendar grid, Monday first
@@ -521,11 +473,6 @@
     for (let d = 1; d <= days; d++) cal.innerHTML += `<span class="${d === ev.d ? "day-mark" : ""}">${d}</span>`;
     tick();
   }
-
-  document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => {
-    lang = b.dataset.lang;
-    render();
-  }));
 
   // Countdown
   const pad = n => String(n).padStart(2, "0");
