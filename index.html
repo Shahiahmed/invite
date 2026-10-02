@@ -249,6 +249,8 @@
   .option:has(input:checked) .dot::after { transform: scale(1); }
   form .btn { margin-top: 8px; width: 100%; }
   .form-note { font-size: 12px; color: var(--ink-soft); text-align: center; }
+  .form-done { font-family: var(--serif); font-style: italic; font-size: 26px; color: var(--gold-dark); text-align: center; padding: 24px 0; }
+  .btn:disabled { opacity: .7; cursor: default; }
   .error { color: #a2452f; font-size: 13px; text-align: center; min-height: 1em; }
 
   footer { padding: 70px 24px 90px; text-align: center; background: var(--cream-2); }
@@ -373,7 +375,7 @@
     </div>
   </section>
 
-  <!-- RSVP via WhatsApp -->
+  <!-- RSVP → Telegram group -->
   <section class="block rsvp" id="rsvp">
     <svg class="ornament reveal"><use href="#orn"/></svg>
     <h2 class="reveal" data-i18n="rsvpTitle"></h2>
@@ -385,8 +387,7 @@
       <label class="option"><input type="radio" name="answer" value="no"><span class="dot"></span><span data-i18n="optNo"></span></label>
       <div class="error" id="formError"></div>
       <button class="btn" type="submit" data-i18n="send"></button>
-      <div class="form-note" data-i18n="note"></div>
-    </form>
+          </form>
   </section>
 
 </main>
@@ -400,7 +401,10 @@
     venue: "«Oyu Hall» банкет залы",
     address: "Астана қ., Ұлы Дала даңғылы, 35",
     mapUrl: "https://2gis.kz/astana/firm/70000001091827940",
-    whatsapp: "77770000000"                   // number for guest replies, digits only
+    telegram: {                               // guest replies go to this group via the bot
+      token: "8782839553:AAEFkQGUlvNmbKHVsYKQNErXrjhpmCHZjqY",
+      chatId: "-5321181756"
+    }
   };
 
   const T = {
@@ -425,14 +429,17 @@
       optCouple: "Жұбайыммен келемін",
       optNo: "Өкінішке орай, келе алмаймын",
       send: "Жауап жіберу",
-      note: "Жауабыңыз WhatsApp арқылы жіберіледі",
       errName: "Аты-жөніңізді жазыңыз",
       errAnswer: "Жауап нұсқасын таңдаңыз",
       bye: "Сіздерді асыға күтеміз!",
       months: ["қаңтар","ақпан","наурыз","сәуір","мамыр","маусым","шілде","тамыз","қыркүйек","қазан","қараша","желтоқсан"],
       weekdays: ["Дс","Сс","Ср","Бс","Жм","Сб","Жс"],
-      msg: { yes: "Сәлеметсіз бе! Құдалыққа келетінімді растаймын.", couple: "Сәлеметсіз бе! Құдалыққа жұбайыммен келетінімізді растаймын.", no: "Сәлеметсіз бе! Өкінішке орай, құдалыққа келе алмаймын." },
-      msgName: "Аты-жөнім"
+      sending: "Жіберілуде...",
+      errSend: "Жіберу мүмкін болмады. Қайталап көріңіз",
+      thanks: "Рақмет! Жауабыңыз қабылданды",
+      tgTitle: "📩 Жаңа жауап",
+      tgName: "Аты-жөні",
+      tgAnswer: "Жауабы"
     }
   };
 
@@ -543,18 +550,38 @@
   }), { threshold: .15 });
   document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 
-  // RSVP → WhatsApp
-  document.getElementById("rsvpForm").addEventListener("submit", e => {
+  // RSVP → Telegram group
+  document.getElementById("rsvpForm").addEventListener("submit", async e => {
     e.preventDefault();
     const t = T[lang];
+    const form = e.currentTarget;
+    const btn = form.querySelector(".btn");
     const name = document.getElementById("guestName").value.trim();
     const answer = document.querySelector("input[name=answer]:checked");
     const err = document.getElementById("formError");
     if (!name) { err.textContent = t.errName; return; }
     if (!answer) { err.textContent = t.errAnswer; return; }
     err.textContent = "";
-    const text = `${t.msg[answer.value]}\n${t.msgName}: ${name}`;
-    window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(text)}`, "_blank");
+    const label = { yes: t.optYes, couple: t.optCouple, no: t.optNo }[answer.value];
+    const text = `${t.tgTitle}
+${t.tgName}: ${name}
+${t.tgAnswer}: ${label}`;
+    btn.disabled = true;
+    btn.textContent = t.sending;
+    try {
+      // Form-encoded body keeps it a simple CORS request (no preflight)
+      const res = await fetch(`https://api.telegram.org/bot${CONFIG.telegram.token}/sendMessage`, {
+        method: "POST",
+        body: new URLSearchParams({ chat_id: CONFIG.telegram.chatId, text })
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.description);
+      form.innerHTML = `<div class="form-done">${t.thanks}</div>`;
+    } catch {
+      err.textContent = t.errSend;
+      btn.disabled = false;
+      btn.textContent = t.send;
+    }
   });
 
   render();
