@@ -3,12 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Құдалық — шақыру</title>
-<meta name="description" content="Құдалық салтанатына шақыру · Приглашение на кудалык">
-<meta property="og:title" content="Құдалық — шақыру">
-<meta property="og:description" content="Сіздерді құдалық салтанатымызға шақырамыз!">
-<meta property="og:image" content="assets/poster.jpg?v=3">
-<meta name="theme-color" content="#f6efe2">
+<title>Құдалық · Шерхан & Зарина</title>
+<meta name="description" content="Құрметті қонақтар! Сіздерді Шерхан мен Заринаның құдалық салтанатына шақырамыз. Oyu Hall, Астана.">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#4a1f22">
+
+<!-- Link previews (WhatsApp, Telegram, Instagram). After deploy, make og:image / og:url absolute: https://your-site/... -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="kk_KZ">
+<meta property="og:site_name" content="Құдалық">
+<meta property="og:title" content="Құдалық · Шерхан & Зарина">
+<meta property="og:description" content="Сіздерді құдалық салтанатымыздың қадірлі қонағы болуға шақырамыз! Oyu Hall, Астана">
+<meta property="og:image" content="assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Құдалық — Шерхан & Зарина">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
@@ -65,7 +77,7 @@
     text-align: center; color: #f3dfb0; transition: opacity .5s;
   }
   .intro-hint .names {
-    font-family: var(--serif); font-style: italic; font-size: 26px; margin-bottom: 14px;
+    font-family: var(--serif); font-weight: 500; font-size: 46px; line-height: 1; margin-bottom: 18px; color: #f3dfb0;
     text-shadow: 0 2px 12px rgba(0, 0, 0, .5);
   }
   .intro-hint .tap {
@@ -293,7 +305,7 @@
     <source src="assets/envelope.mp4" type="video/mp4">
   </video>
   <div class="intro-hint">
-    <div class="names" data-bind="hosts"></div>
+    <div class="names">Құдалық</div>
     <span class="tap" data-i18n="open"></span>
   </div>
 </div>
@@ -332,7 +344,7 @@
     <p class="lead reveal" data-i18n="greetText"></p>
     <div class="hosts reveal">
       <span class="label" data-i18n="hostsLabel"></span>
-      <div class="names" data-bind="hosts"></div>
+      <div class="names" data-bind="signers"></div>
     </div>
   </section>
 
@@ -390,7 +402,7 @@
   <footer>
     <svg class="ornament flip"><use href="#orn"/></svg>
     <div class="big" data-i18n="bye"></div>
-    <p data-bind="hosts"></p>
+    <p data-bind="signers"></p>
   </footer>
 </main>
 
@@ -398,10 +410,11 @@
   // ===== Edit the invitation details here =====
   const CONFIG = {
     hosts: "Шерхан & Зарина",
-    date: "2026-11-14T18:00:00+05:00",       // date, time, Almaty timezone
-    venue: { kk: "«Rixos» мейрамханасы", ru: "Ресторан «Rixos»" },
-    address: { kk: "Алматы қ., Байтұрсынұлы к-сі, 110", ru: "г. Алматы, ул. Байтурсынова, 110" },
-    mapUrl: "https://2gis.kz/almaty",
+    signers: "Айжан — Айгүл",                 // signature under «Ізгі ниетпен»
+    date: "2026-11-14T16:00:00+05:00",       // date, time, Almaty timezone
+    venue: { kk: "«Oyu Hall» банкет залы", ru: "Банкетный зал «Oyu Hall»" },
+    address: { kk: "Астана қ., Ұлы Дала даңғылы, 35", ru: "г. Астана, пр. Улы Дала, 35" },
+    mapUrl: "https://2gis.kz/astana/firm/70000001091827940",
     whatsapp: "77770000000",                  // number for guest replies, digits only
     defaultLang: "kk"
   };
@@ -481,7 +494,6 @@
   })();
 
   let lang = CONFIG.defaultLang;
-  try { lang = localStorage.getItem("lang") || lang; } catch (e) {}
 
   function render() {
     const t = T[lang];
@@ -512,7 +524,6 @@
 
   document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => {
     lang = b.dataset.lang;
-    try { localStorage.setItem("lang", lang); } catch (e) {}
     render();
   }));
 
